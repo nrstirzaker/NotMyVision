@@ -1,13 +1,9 @@
 var Twitter = require('twitter');
-var configAPI = require('./config/config-api.json')
+var appConfig = require('./AppConfig.js');
 var Tweet = require('./MongoDB');
+var twitterKeys = appConfig.getKeys();
 
-var twitterClient = new Twitter({
-  consumer_key: process.env.CONSUMER_KEY || configAPI.consumerKey,
-  consumer_secret: process.env.CONSUMER_SECRET || configAPI.consumerSecret,
-  access_token_key: process.env.ACCESS_TOKEN_KEY || configAPI.accessTokenKey,
-  access_token_secret: process.env.ACCESS_TOKEN_SECRET || configAPI.accessTokenSecret,
-});
+var twitterClient = new Twitter( twitterKeys );
 
 
 

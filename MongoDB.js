@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
-var configAPI = require('./config/config-api.json')
+var appConfig = require('./AppConfig.js')
 var Schema = mongoose.Schema;
-var mongoUrl = process.env.MONGO_URL || configAPI.mongoUrl;
+var mongoUrl = appConfig.getMongoUrl();
 mongoose.connect( mongoUrl );
 
 var imageSizeSchema = new Schema({
