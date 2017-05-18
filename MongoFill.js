@@ -8,7 +8,16 @@ mongoose.connect('mongodb://localhost/CapacityTest');
 
 var db = new Db('CapacityTest', new Server('localhost', 27017));
 
+function makeText(length)
+{
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ";
 
+    for( var i=0; i < length; i++ )
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
 
 
 // tweetSchemaTest.pre('save', function (next) {
@@ -34,19 +43,24 @@ db.open(function (err, db) {
 
   console.log("Start");
 
-  var text = "the quick brown fox jumped over the laxy dog.the quick brown fox jumped over the laxy dog.the quick brown fox jumped over the laxy dog.1232"
-  var url = "http://pbs.twimg.com/media/C-zt3eXWAAADdTu.jpg";
+  //var text = "the quick brown fox jumped over the laxy dog.the quick brown fox jumped over the laxy dog.the quick brown fox jumped over the laxy dog.1232"
+  var urlPrefix = "http://pbs.twimg.com/media/";
+  //var urlSuffix = "C-zt3eXWAAADdTu";
   var engine = Random.engines.mt19937().autoSeed();
   var distribution = Random.integer(1000000, 9999999);
 
   var batch = Collection.initializeUnorderedBulkOp({ useLegacyOps: true });
 
   for (var o = 0; o < 100; o++) {
-    console.log("o: " + o);
+    console.log("Inner Loop-----------------------: " + o);
     for (var i = 0; i < 1000; i++) {
       console.log("i: " + i);
       var date = new Date();
       var randomId = distribution(engine) + date.getTime();
+      var text =  makeText(140);
+      var urlSuffix = makeText(8);
+
+      var url = urlPrefix + urlSuffix + ".jpg";
 
       batch.insert({
 

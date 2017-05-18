@@ -1,13 +1,45 @@
 var mongoose = require('mongoose');
+var configAPI = require('./config/config-api.json')
 var Schema = mongoose.Schema;
-mongoose.connect('mongodb://localhost/NotMyVision');
+var mongoUrl = process.env.MONGO_URL || configAPI.mongoUrl;
+mongoose.connect( mongoUrl );
 
+var imageSizeSchema = new Schema({
 
+        thumb: {
+          h: Number,
+          resize: String,
+          w: Number
+        },
+        large: {
+          h: Number,
+          resize: String,
+          w: Number
+        },
+        medium: {
+          h: Number,
+          resize: String,
+          w: Number
+        },
+        small: {
+          h: Number,
+          resize: String,
+          w: Number
+        }
+
+});
+
+var ImageSize = mongoose.model('Child',imageSizeSchema);
+
+mongoose.model['ImageSize'] = ImageSize;
 
 var tweetSchema = new Schema({
 
         id : {type : String, required: true, unique: true},
+        tweetId : String,
+        senderHandle : String,
         mediaUrl : String,
+        sizes: [mongoose.model["ImageSize"].schema],
         tweetCreatedAt : Date,
         text : String,
         createdAt : Date,
@@ -16,10 +48,12 @@ var tweetSchema = new Schema({
 });
 
 
+
+
 tweetSchema.pre('save', function(next) {
   // get the current date
   var currentDate = new Date();
-  
+
   // change the updated_at field to current date
   this.updatedAt = currentDate;
 
@@ -31,6 +65,7 @@ tweetSchema.pre('save', function(next) {
 });
 
 var Tweet = mongoose.model('Tweet', tweetSchema);
+mongoose.model['Tweet'] = Tweet;
 
 // make this available to our users in our Node applications
 module.exports = Tweet;

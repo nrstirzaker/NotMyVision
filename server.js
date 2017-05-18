@@ -1,7 +1,4 @@
-//var Twitter = require('twit');
-//var Twitter = require('twitter-node-client').Twitter;
 var Twitter = require('twitter');
-var firebase = require('@google-cloud/storage');
 var configAPI = require('./config/config-api.json')
 var Tweet = require('./MongoDB');
 
@@ -13,34 +10,31 @@ var twitterClient = new Twitter({
 });
 
 
-// var firebaseConfig = {
-//     apiKey: process.env.API_KEY || configAPI.apiKey,
-//     authDomain: process.env.AUTH_DOMAIN || configAPI.authDomain, 
-//     projectId: process.env.PROJECT_ID || configAPI.projectId,
-//     storageBucket: process.env.STORAGE_BUCKET || configAPI.storageBucket
-// }
-
 
 var error = function (error) {
   console.log("ERROR: " + error + " at :" + new Date());
 }
 
 var success = function (tweet) {
-  //console.log(JSON.parse(tweet));
-  //var tdata = JSON.parse(tweets);
-  //tweets.forEach(function (tweet) {
+
   console.log("Tweet received: " + new Date());
   if (tweet.entities && tweet.entities.media && tweet.entities.media.length > 0) {
     tweet.entities.media.forEach(function (m) {
       console.log("Meda Tweet received: " + new Date());
       console.log("media url: " + m.media_url);
 
-      var tweetEntity = Tweet({
+      var date = new Date();
+      var id = date.getTime();
 
-        id: tweet.id,
+      var tweetEntity = Tweet({
+        id: id,
+        tweetId: tweet.id,
+        senderHandle: tweet.user.screen_name,
         mediaUrl: m.media_url,
+        sizes : m.sizes,
         tweetCreatedAt: tweet.created_at,
         text: tweet.text
+
 
       });
 
@@ -53,27 +47,7 @@ var success = function (tweet) {
   }
 
 }
-//);
-//}
-
-//firebase.initializeApp(firebaseConfig);
-
-
-// var params = { screen_name: '@TimeOutLondon' };
-// twitterClient.getUserTimeline(params, error, success);
 
 var stream = twitterClient.stream('user', {});
 stream.on('data', success);
 stream.on('error', error);
-
-
-//client.getTweet({ id: '22906929'}, error, success);
-
-
-//  {
-//   if (!error) {
-//     console.log(tweets);
-//   }else{
-//       console.log(error);
-//   }
-// });
