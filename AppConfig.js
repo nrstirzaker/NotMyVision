@@ -4,9 +4,9 @@ var fs = require('fs');
 var getMongoUrl = function(){
     if (fs.existsSync(filename)) {
         var configAPI = require(filename);
-        return configAPI.mongoUrl;
+        return configAPI.mongoDBUrl;
     }else{
-        return process.env.MONGO_URL;
+        return process.env.MONGODB_URL;
     } 
 }
 
@@ -21,7 +21,6 @@ var getKeys = function () {
         keys.access_token_key = configAPI.accessTokenKey;
         keys.access_token_secret = configAPI.accessTokenSecret;
 
-        //return JSON.stringify( keys );
         return keys;
 
     } else {
@@ -32,7 +31,6 @@ var getKeys = function () {
         keys.access_token_key = process.env.ACCESS_TOKEN_KEY;
         keys.access_token_secret = process.env.ACCESS_TOKEN_SECRET;
 
-        //return JSON.stringify( keys );
         return keys;
 
     }
