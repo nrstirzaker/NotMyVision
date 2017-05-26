@@ -23,6 +23,7 @@ var success = function (tweet) {
       var id = date.getTime();
 
       var tweetEntity = Tweet({
+      
         id: id,
         tweetId: tweet.id,
         senderHandle: tweet.user.screen_name,
